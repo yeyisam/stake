@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 public class Customer {
 
+    private Integer customerId;
+
+    private  String customerName;
     public Integer getCustomerId() {
         return customerId;
     }
@@ -12,24 +15,16 @@ public class Customer {
         this.customerId = customerId;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 
-    private Integer customerId;
-     private String sessionKey;
-     private LocalDateTime createTime;
+
 
 }

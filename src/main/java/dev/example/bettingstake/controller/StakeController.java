@@ -1,27 +1,53 @@
 package dev.example.bettingstake.controller;
 
+import dev.example.bettingstake.model.BettingStake;
+import dev.example.bettingstake.service.SessionService;
+import dev.example.bettingstake.service.StakeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/stake")
+@RequestMapping("/")
 public class StakeController {
 
-    @RequestMapping(value="/{customerid}/session",method= RequestMethod.GET)
-    @ResponseBody
-    public  String getSessionKey(@PathVariable String customerid){
+    @Autowired
+    private StakeService stakeService;
 
-        String c=customerid;
-        return "Hello World!"+c ;
+    @Autowired
+    private SessionService sessionService;
+
+    @RequestMapping(value="/{customerId}/session",method= RequestMethod.GET)
+    @ResponseBody
+    public  String getSessionKey(@PathVariable Integer customerId){
+
+        return sessionService.getSessionKeyByCustomerId(customerId);
 
     }
 
-    @RequestMapping(value="/{betofferid}/stake",method= RequestMethod.POST)
+    @PostMapping(value="/{betOfferId}/stake")
     @ResponseBody
-    public  String addStake(String betofferid,String sessionkey){
+    public  void addStake(Integer betOfferId,String sessionkey,@RequestBody Integer stake){
 
+        BettingStake bettingStake=new BettingStake();
+        bettingStake.setStakeAmount(stake);
+        bettingStake.setCustomerId(11);
+        bettingStake.setBettingOffer(betOfferId);
 
-        return "Hello World!";
+        stakeService.addStake(bettingStake);
     }
+
+    @GetMapping (value="/{betOfferId}/highStakes")
+    @ResponseBody
+    public  String getHighStakes(@PathVariable Integer betOfferId){
+
+        List<BettingStake> stakes= stakeService.getHighStakes(betOfferId);
+        return  "aa";
+
+    }
+
+
 
 
 }

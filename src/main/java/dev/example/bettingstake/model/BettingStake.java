@@ -1,7 +1,9 @@
 package dev.example.bettingstake.model;
 
-public class Stake {
-
+public class BettingStake {
+    private  Integer customerId;
+    private  Integer stakeAmount;
+    private  Integer bettingOffer;
     public Integer getCustomerId() {
         return customerId;
     }
@@ -26,9 +28,7 @@ public class Stake {
         this.bettingOffer = bettingOffer;
     }
 
-    private  Integer customerId;
-    private  Integer stakeAmount;
-    private  Integer bettingOffer;
+
 
 
 }
