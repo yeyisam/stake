@@ -1,21 +1,27 @@
 package dev.example.bettingstake.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/stake")
 public class StakeController {
 
+    @RequestMapping(value="/{customerid}/session",method= RequestMethod.GET)
+    @ResponseBody
+    public  String getSessionKey(@PathVariable String customerid){
 
-    public String getCustomerSessionKey(String customerId) {
-        return super.toString();
+        String c=customerid;
+        return "Hello World!"+c ;
+
     }
 
-    @RequestMapping("/test")
+    @RequestMapping(value="/{betofferid}/stake",method= RequestMethod.POST)
     @ResponseBody
-    public String testDemo() {
+    public  String addStake(String betofferid,String sessionkey){
+
+
         return "Hello World!";
     }
+
+
 }

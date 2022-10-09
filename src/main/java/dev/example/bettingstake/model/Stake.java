@@ -10,12 +10,12 @@ public class Stake {
         this.customerId = customerId;
     }
 
-    public Integer getStake() {
-        return stake;
+    public Integer getStakeAmount() {
+        return stakeAmount;
     }
 
-    public void setStake(Integer stake) {
-        this.stake = stake;
+    public void setStakeAmount(Integer stakeAmount) {
+        this.stakeAmount = stakeAmount;
     }
 
     public Integer getBettingOffer() {
@@ -27,7 +27,7 @@ public class Stake {
     }
 
     private  Integer customerId;
-    private  Integer stake;
+    private  Integer stakeAmount;
     private  Integer bettingOffer;
 
 
