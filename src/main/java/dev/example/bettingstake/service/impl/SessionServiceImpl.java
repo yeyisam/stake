@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class SessionServiceImpl implements SessionService {
 
-    private  static Map<Integer, Session> customerSession=new ConcurrentHashMap<Integer,Session>();
+    private  static Map<Integer, Session> customerSession=new ConcurrentHashMap<>();
 
     @Override
     public String getSessionKeyByCustomerId(Integer customerId) {
@@ -20,7 +20,7 @@ public class SessionServiceImpl implements SessionService {
 
         if(null==session){
             session=GenerateNewSession(customerId);
-            customerSession.put(customerId.intValue(),session);
+            customerSession.put(customerId,session);
         }
         else{
             Date expireTime= session.getExpireTime();
@@ -29,9 +29,8 @@ public class SessionServiceImpl implements SessionService {
                 return  session.getSessionKey();
             }
             else{
-                session.setExpireTime();
-                session.setSessionKey(GetGUID()+customerId);
-                customerSession.put(customerId.intValue(),session);
+                session=GenerateNewSession(customerId);
+                customerSession.replace(customerId,session);
             }
         }
 
