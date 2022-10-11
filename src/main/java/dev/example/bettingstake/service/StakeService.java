@@ -8,7 +8,7 @@ public interface StakeService{
 
 
 
-      Void addStake(BettingStake stake);
+      void addStake(BettingStake stake);
 
       List<BettingStake> getHighStakes(Integer betOfferId);
 

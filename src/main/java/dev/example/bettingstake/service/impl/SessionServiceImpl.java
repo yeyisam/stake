@@ -4,37 +4,40 @@ import dev.example.bettingstake.model.Session;
 import dev.example.bettingstake.service.SessionService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 @Service
 public class SessionServiceImpl implements SessionService {
 
-    private  static Map<Integer, Session> customerSession=new ConcurrentHashMap<>();
+    private  static ConcurrentSkipListSet<Session> customerSession=new ConcurrentSkipListSet<>();
 
     @Override
     public String getSessionKeyByCustomerId(Integer customerId) {
-        Session session=customerSession.get(customerId);
+         List<Session> sessions=customerSession.stream().filter(l ->l.getCustomerId()==customerId).collect(Collectors.toList());
 
-        if(null==session){
-            session=GenerateNewSession(customerId);
-            customerSession.put(customerId,session);
+        if(sessions.isEmpty()){
+            Session session=GenerateNewSession(customerId);
+            customerSession.add(session);
+            return session.getSessionKey();
         }
         else{
+            Session session=sessions.get(0);
             Date expireTime= session.getExpireTime();
             Date now=new Date();
-            if(expireTime.compareTo(now)>0){
-                return  session.getSessionKey();
-            }
-            else{
+            if(expireTime.compareTo(now)<0){
                 session=GenerateNewSession(customerId);
-                customerSession.replace(customerId,session);
             }
+            return  session.getSessionKey();
         }
+    }
 
-        return session.getSessionKey();
+    @Override
+   public Session getSessionBySessionKey(String sessionKey){
+        Session session=customerSession.stream().filter(l ->l.getSessionKey().equals(sessionKey)).findFirst().orElse(null);
+         return  session;
     }
 
     private  Session GenerateNewSession(Integer customerId){
