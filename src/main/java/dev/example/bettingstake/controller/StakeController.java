@@ -56,6 +56,10 @@ public class StakeController {
     public  String getHighStakes(@PathVariable Integer betOfferId){
 
         List<BettingStake> stakes= stakeService.getHighStakes(betOfferId);
+        if(stakes.isEmpty())
+        {
+            return "";
+        }
 
         return stakes.stream().map(x->(x.getCustomerId()+"="+x.getStakeAmount())).collect(Collectors.joining(","));
 

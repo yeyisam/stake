@@ -48,7 +48,10 @@ public class StakeServiceImpl implements StakeService {
     public List<BettingStake> getHighStakes(Integer betOfferId) {
 
         CopyOnWriteArrayList<BettingStake> customerBettingStakes = topBettingStakes.get(betOfferId);
-
+        if (customerBettingStakes.isEmpty())
+        {
+            return  null;
+        }
         return customerBettingStakes.stream()
                 .sorted(Comparator.comparing(BettingStake::getStakeAmount).reversed())
                 .collect(Collectors.toList());
