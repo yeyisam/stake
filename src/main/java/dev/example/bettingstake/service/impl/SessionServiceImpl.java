@@ -12,31 +12,31 @@ import java.util.stream.Collectors;
 @Service
 public class SessionServiceImpl implements SessionService {
 
-    private  static ConcurrentSkipListSet<Session> customerSession=new ConcurrentSkipListSet<>();
+
+    private  static Map<Integer, Session> customerSession=new ConcurrentHashMap<>();
 
     @Override
     public String getSessionKeyByCustomerId(Integer customerId) {
-         List<Session> sessions=customerSession.stream().filter(l ->l.getCustomerId()==customerId).collect(Collectors.toList());
+        Session session=customerSession.get(customerId);
 
-        if(sessions.isEmpty()){
-            Session session=GenerateNewSession(customerId);
-            customerSession.add(session);
-            return session.getSessionKey();
+        if(null==session){
+            session=GenerateNewSession(customerId);
+            customerSession.put(customerId,session);
         }
         else{
-            Session session=sessions.get(0);
             Date expireTime= session.getExpireTime();
             Date now=new Date();
             if(expireTime.compareTo(now)<0){
-                session=GenerateNewSession(customerId);
+                session.setExpireTime();
             }
-            return  session.getSessionKey();
         }
+
+        return session.getSessionKey();
     }
 
     @Override
    public Session getSessionBySessionKey(String sessionKey){
-        Session session=customerSession.stream().filter(l ->l.getSessionKey().equals(sessionKey)).findFirst().orElse(null);
+        Session session=customerSession.values().stream().filter(l ->l.getSessionKey().equals(sessionKey)).findFirst().orElse(null);
          return  session;
     }
 
