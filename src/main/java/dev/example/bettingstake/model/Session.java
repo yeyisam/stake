@@ -3,7 +3,7 @@ package dev.example.bettingstake.model;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Session implements Comparable<Session>{
+public class Session {
 
     private String sessionKey;
     private  Integer customerId;
@@ -37,9 +37,6 @@ public class Session implements Comparable<Session>{
         Date expireTime = c.getTime();
         this.expireTime = expireTime;
     }
-    @Override
-    public int compareTo(Session session) {
-        return this.getSessionKey().compareTo(session.getSessionKey());
-    }
+ 
 
 }
