@@ -7,7 +7,7 @@ For there is no persistence, the data stored in memory,so i choose the below dat
  List<BettingStake> :store all the stakes(need to optimize)
  
  
-class variable as below
+related class as below
 
 public class Session
 {
