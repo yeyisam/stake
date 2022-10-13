@@ -4,6 +4,7 @@ For there is no persistence, the data stored in memory,so i choose the below dat
 
  ConcurrentHashMap<Integer, Session>: store the session list:key->customerId, value->session object 
  ConcurrentSkipListMap<Integer, CopyOnWriteArrayList<BettingStake>>: store top 20 BettingStakes
+ 
  List<BettingStake> :store all the stakes(need to optimize)
  
  
