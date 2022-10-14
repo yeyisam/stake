@@ -21,29 +21,26 @@ public class StakeController {
     @Autowired
     private SessionService sessionService;
 
-    @RequestMapping(value="/{customerId}/session",method= RequestMethod.GET)
+    @RequestMapping(value = "/{customerId}/session", method = RequestMethod.GET)
     @ResponseBody
-    public  String getSessionKey(@PathVariable Integer customerId){
+    public String getSessionKey(@PathVariable Integer customerId) {
 
         return sessionService.getSessionKeyByCustomerId(customerId);
-
     }
 
-    @PostMapping(value="/{betOfferId}/stake")
+    @PostMapping(value = "/{betOfferId}/stake")
     @ResponseBody
-    public  void addStake(@PathVariable Integer betOfferId,String sessionkey,@RequestBody Integer stake) throws Exception {
+    public void addStake(@PathVariable Integer betOfferId, String sessionKey, @RequestBody Integer stake) throws Exception {
 
-        Session session=sessionService.getSessionBySessionKey(sessionkey);
-        if(session==null){
+        Session session = sessionService.getSessionBySessionKey(sessionKey);
+        if (session == null) {
             throw new Exception("The sessionKey is not valid.");
-        }
-        else if(session.getExpireTime().compareTo(new Date())<0)
-        {
+        } else if (session.getExpireTime() < new Date().getTime()) {
             throw new Exception("The sessionKey is expired");
         }
 
 
-        BettingStake bettingStake=new BettingStake();
+        BettingStake bettingStake = new BettingStake();
         bettingStake.setStakeAmount(stake);
         bettingStake.setCustomerId(session.getCustomerId());
         bettingStake.setBettingOffer(betOfferId);
@@ -51,21 +48,18 @@ public class StakeController {
         stakeService.addStake(bettingStake);
     }
 
-    @GetMapping (value="/{betOfferId}/highStakes")
+    @GetMapping(value = "/{betOfferId}/highStakes")
     @ResponseBody
-    public  String getHighStakes(@PathVariable Integer betOfferId){
+    public String getHighStakes(@PathVariable Integer betOfferId) {
 
-        List<BettingStake> stakes= stakeService.getHighStakes(betOfferId);
-        if(stakes.isEmpty())
-        {
+        List<BettingStake> stakes = stakeService.getHighStakes(betOfferId);
+        if (stakes.isEmpty()) {
             return "";
         }
 
-        return stakes.stream().map(x->(x.getCustomerId()+"="+x.getStakeAmount())).collect(Collectors.joining(","));
+        return stakes.stream().map(x -> (x.getCustomerId() + "=" + x.getStakeAmount())).collect(Collectors.joining(","));
 
     }
-
-
 
 
 }

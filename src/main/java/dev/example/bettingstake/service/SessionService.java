@@ -6,4 +6,7 @@ public interface SessionService {
     String getSessionKeyByCustomerId(Integer customerId);
 
     Session getSessionBySessionKey(String sessionKey);
+
+    void  clearExpiredSession();
+
 }

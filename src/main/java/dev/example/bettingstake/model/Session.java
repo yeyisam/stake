@@ -7,7 +7,7 @@ public class Session {
 
     private String sessionKey;
     private  Integer customerId;
-    private Date expireTime;
+    private Long expireTime;
 
     public String getSessionKey() {
         return sessionKey;
@@ -25,17 +25,14 @@ public class Session {
         this.customerId = customerId;
     }
 
-    public Date getExpireTime() {
+    public Long getExpireTime() {
         return expireTime;
     }
 
     public void setExpireTime() {
         Date currentDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
-        c.add(Calendar.MINUTE, 10);
-        Date expireTime = c.getTime();
-        this.expireTime = expireTime;
+
+        this.expireTime = currentDate.getTime()+ 10 * 60 *1000;
     }
  
 

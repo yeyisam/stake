@@ -6,27 +6,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 @Service
 public class SessionServiceImpl implements SessionService {
 
 
-    private  static Map<Integer, Session> customerSession=new ConcurrentHashMap<>();
+    private static Map<Integer, Session> customerSession = new ConcurrentHashMap<>();
 
     @Override
     public String getSessionKeyByCustomerId(Integer customerId) {
-        Session session=customerSession.get(customerId);
+        Session session = customerSession.get(customerId);
 
-        if(null==session){
-            session=GenerateNewSession(customerId);
-            customerSession.put(customerId,session);
-        }
-        else{
-            Date expireTime= session.getExpireTime();
-            Date now=new Date();
-            if(expireTime.compareTo(now)<0){
+        if (null == session) {
+            session = generateNewSession(customerId);
+            customerSession.put(customerId, session);
+        } else {
+            if (session.getExpireTime() < new Date().getTime()) {
                 session.setExpireTime();
             }
         }
@@ -35,14 +31,26 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-   public Session getSessionBySessionKey(String sessionKey){
-        Session session=customerSession.values().stream().filter(l ->l.getSessionKey().equals(sessionKey)).findFirst().orElse(null);
-         return  session;
+    public Session getSessionBySessionKey(String sessionKey) {
+
+        Optional<Session> session = customerSession.values().stream().findFirst();
+
+        if (session.isPresent()) {
+            return session.get();
+        }
+        return null;
     }
 
-    private  Session GenerateNewSession(Integer customerId){
-        String sessionKey= GetGUID()+customerId;
-        Session session=new  Session();
+    @Override
+    public void clearExpiredSession() {
+        //remove the sessions that expired for ten minutes
+        List<Session> expiredSession = customerSession.values().stream().filter(x -> (x.getExpireTime() + 10 * 60 * 1000) < new Date().getTime()).collect(Collectors.toList());
+        expiredSession.forEach(session -> customerSession.remove(session.getCustomerId()));
+    }
+
+    private Session generateNewSession(Integer customerId) {
+        String sessionKey = getGUID() + customerId;
+        Session session = new Session();
         session.setSessionKey(sessionKey);
         session.setCustomerId(customerId);
         session.setExpireTime();
@@ -50,7 +58,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
 
-    private String GetGUID() {
+    private String getGUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 }
